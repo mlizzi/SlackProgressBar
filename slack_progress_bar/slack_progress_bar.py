@@ -11,6 +11,7 @@ class SlackProgressBar:
         total: int,
         value: int = 0,
         bar_width: int = 20,
+        notify: bool = True,
     ) -> None:
         """A progress bar to use with Slack.
 
@@ -26,11 +27,17 @@ class SlackProgressBar:
             The initial value of the progress bar.
         bar_width
             The width of the progress bar as seen on Slack.
+        notify
+            If the progress bar will send a message on Slack. Can be used
+            to disable or enable message sending.
         """
         self._client = WebClient(token=token)
         self._total = total
         self._bar_width = bar_width
         self._value = value
+        self._ts = None
+
+        self.notify = notify
 
         # Get channel id of user conversation (for posting and updating)
         try:
@@ -39,11 +46,8 @@ class SlackProgressBar:
         except SlackApiError:
             ValueError("Enter valid user id (Slack Profile -> Copy member ID")
 
-        res = self._client.chat_postMessage(
-            channel=self._channel_id, text=self._as_string()
-        )
-
-        self._ts = res["ts"]
+        if self.notify:
+            self._chat_update()
 
     def update(self, value: int) -> None:
         """Update the current progress bar on Slack.
@@ -66,20 +70,35 @@ class SlackProgressBar:
             if self._value == self._total
             else ""
         )
-
-        self._client.chat_update(
-            channel=self._channel_id,
-            ts=self._ts,
-            text=self._as_string(message),
-        )
+        self._chat_update(message)
 
     def error(self) -> None:
         """Set the bar to an error state to indicate loading has stopped."""
-        self._client.chat_update(
-            channel=self._channel_id,
-            ts=self._ts,
-            text=self._as_string(message=":warning: ERROR: Loading stopped!"),
+        self._chat_update(
+            self._as_string(message=":warning: ERROR: Loading stopped!")
         )
+
+    def _chat_update(self, message: str = "") -> None:
+        """Sends a message on Slack if the progress bar is not disabled.
+
+        Parameters
+        ----------
+        message
+            A message to include alongside the progress bar.
+        """
+
+        if self.notify:
+            if not self._ts:
+                res = self._client.chat_postMessage(
+                    channel=self._channel_id, text=self._as_string(message)
+                )
+                self._ts = res["ts"]
+            else:
+                self._client.chat_update(
+                    channel=self._channel_id,
+                    ts=self._ts,
+                    text=self._as_string(message),
+                )
 
     def _as_string(self, message: str = "") -> str:
         """Get the progress bar visualized as a string.
