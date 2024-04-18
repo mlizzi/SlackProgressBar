@@ -5,7 +5,12 @@ from slack_sdk.errors import SlackApiError
 class SlackProgressBar:
 
     def __init__(
-        self, token: str, user_id: str, total: int, bar_width: int = 20
+        self,
+        token: str,
+        user_id: str,
+        total: int,
+        value: int = 0,
+        bar_width: int = 20,
     ) -> None:
         """A progress bar to use with Slack.
 
@@ -17,13 +22,15 @@ class SlackProgressBar:
             The user id of the Slack account to send messages to.
         total
             The total length of the progress bar.
+        value
+            The initial value of the progress bar.
         bar_width
             The width of the progress bar as seen on Slack.
         """
         self._client = WebClient(token=token)
         self._total = total
         self._bar_width = bar_width
-        self._value = 0
+        self._value = value
 
         # Get channel id of user conversation (for posting and updating)
         try:
