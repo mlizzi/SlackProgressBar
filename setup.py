@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="slack_progress_bar",
-    version="1.4.0",
+    version="2.0.0",
     author="Michael Lizzi",
     author_email="michael.lizzi@hotmail.com",
     description="A Python package for displaying progress bars in Slack messages.",
