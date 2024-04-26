@@ -43,3 +43,5 @@ Instantiating or updating a `SlackProgressBar` will send a message to the `user_
 via private message.
 
 To create another progress bar on Slack, instantiate a new instance of `SlackProgressBar`.
+
+Make use of the `progress_bar.notify` property to turn on / off message sending as desired.
