@@ -9,8 +9,16 @@ A Python library for adding a progress bar to a Slack Bot, updated for Python 3.
 pip install slack-progress-bar
 ```
 
+## Overview
+- The `SlackProgressBar` enables progress bars to be sent to users of a Slack Workspace. 
+- Instantiating or updating a `SlackProgressBar` will send a message to the `user_id` from the bot 
+via private message.
+- To create another progress bar on Slack, instantiate a new instance of `SlackProgressBar`.
+- Make use of the `SlackProgressBar.notify` property to turn on / off message sending as desired.
+
+
 ## Tutorial
-1. Create a new Slack app for your workspace by going [here](](https://api.slack.com/apps) and clicking `Create New App`. Follow the prompts to create a new app from scratch.
+1. Create a new Slack app for your workspace with the [Slack Apps API](https://api.slack.com/apps) and clicking `Create New App`. Follow the prompts to create a new app from scratch.
 2. Go to `Features -> OAuth & Permissions` and add the following scopes to the `Bot Token Scopes`:  `chat:write`, `channels:manage`, `groups:write`, `im:write`, `mpim:write`.
 3. Go to `Settings -> Install App` and press `Install to Workspace`. Press `Allow`.
 4. On the same page, copy the generated `Bot User OAuth Token`, and use it for the `token` field of the `SlackProgressBar` class.
@@ -39,9 +47,3 @@ for i in range(150):
     except Exception:
         progress_bar.error()
 ```
-Instantiating or updating a `SlackProgressBar` will send a message to the `user_id` from the bot 
-via private message.
-
-To create another progress bar on Slack, instantiate a new instance of `SlackProgressBar`.
-
-Make use of the `progress_bar.notify` property to turn on / off message sending as desired.
