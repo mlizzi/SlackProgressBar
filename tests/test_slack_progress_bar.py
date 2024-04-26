@@ -3,12 +3,11 @@ from unittest.mock import patch
 import pytest
 from slack_sdk.errors import SlackApiError
 
+from slack_progress_bar import SlackProgressBar
 
-@patch("slack_sdk.WebClient")
+
+@patch("slack_progress_bar.slack_progress_bar.WebClient")
 def test_slack_progress_bar(MockClient):
-
-    # Note: Import this after patching WebClient in decorator
-    from slack_progress_bar import SlackProgressBar
 
     # Adjust params for the mock web client to test
     mock_web_client = MockClient.return_value
