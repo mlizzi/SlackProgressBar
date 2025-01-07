@@ -7,10 +7,11 @@ class SlackProgressBar:
     def __init__(
         self,
         token: str,
-        user_id: str,
         total: int,
         value: int = 0,
         bar_width: int = 20,
+        user_id: str=None,
+        channel_id: str=None,
         notify: bool = True,
     ) -> None:
         """A progress bar to use with Slack.
@@ -41,8 +42,12 @@ class SlackProgressBar:
 
         # Get channel id of user conversation (for posting and updating)
         try:
-            res = self._client.conversations_open(users=user_id)
-            self._channel_id = res["channel"]["id"]
+            if user_id:
+                res = self._client.conversations_open(users=user_id)
+                self._channel_id = res["channel"]["id"]
+            elif channel_id:
+                self._channel_id = channel_id
+
         except SlackApiError:
             raise ValueError(
                 "Enter valid user_id (Slack Profile -> Copy member ID) or check token!"
@@ -122,3 +127,4 @@ class SlackProgressBar:
             f"{bar} {self._value}/{self._total} "
             f"({int(self._value / self._total * 100)}%)"
         )
+
